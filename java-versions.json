@@ -1,0 +1,4 @@
+[
+    {"name": "test2", "path": "c:/does/not/exist"},
+    {"name": "test1", "path": "c:/does/not/exist/1"}
+]
