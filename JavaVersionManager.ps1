@@ -9,21 +9,40 @@ function java-get-list {
 }
 
 function java-select-version {
-   #Param(
-   #[parameter(Mandatory=$true)][Int] $number=0
-   #)
+   Param(
+   [parameter(Mandatory=$true)][Int] $number
+   )
    $array = get-java-versions
-   $java_version = $array[0]
+   $java_version = $array[$number]
+   $name = $java_version.name
+   $path = $java_version.path
 
-   # extract variable from java_version
-   $java_version | Get-Member -Name "path"
-   #$env:Path += ";"
-    #for now do a temporary add to the path if a interger is inputted in the method
+   p $env:Path.Contains($path)
+
+   [Environment]::SetEnvironmentVariable('Test', $path, [System.EnvironmentVariableTarget]::User)
+   #$env:Path += ";" + $path;
+        # choose if you want to add to user path (non-admin) or system/machine path (admin)
+            # for now will just use user path
+        #later on replace the old java path with the new path
+            # you will need to save the last path to a settings file
+                # if the last saved path is not present in env path just append it
         #later on add it to fixed to path
-        #later on replace the java path with new path
 
- #output the list if empty
+
+ #output the list if empty, with numbers
 }
+
+function p {
+    Param(
+    [parameter(Mandatory=$true)][string] $message
+    )
+    echo $message
+}
+
+function testground {
+    [Environment]::SetEnvironmentVariable('Test', 'test', [System.EnvironmentVariableTarget]::Machine)
+}
+
 
 
 # use modules to privatize the functions you don't want to export
