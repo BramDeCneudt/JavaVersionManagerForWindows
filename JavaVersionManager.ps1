@@ -1,35 +1,47 @@
+function getObjectsFromFile {
+    Param(
+    [parameter(Mandatory=$true)][string] $fileName
+    )
+    Get-Content -Path $PSScriptRoot\$fileName -Encoding UTF8 | ConvertFrom-Json
+}
+
 
 function get-java-versions {
-    Get-Content -Path $PSScriptRoot\java-versions.json -Encoding UTF8 | ConvertFrom-Json
+    getObjectsFromFile "java-versions.json"
 }
 
 function java-get-list {
     get-java-versions
-    #number the output
+
+}
+
+function get-settings {
+    getObjectsFromFile "settings.json"
+}
+
+function save-settings {
+#TODO implement further
 }
 
 function java-select-version {
    Param(
    [parameter(Mandatory=$true)][Int] $number
    )
+   #TODO set a first time check up here for getting the settings
    $array = get-java-versions
    $java_version = $array[$number]
    $name = $java_version.name
    $path = $java_version.path
-
-   p $env:Path.Contains($path)
-
-   [Environment]::SetEnvironmentVariable('Test', $path, [System.EnvironmentVariableTarget]::User)
-   #$env:Path += ";" + $path;
-        # choose if you want to add to user path (non-admin) or system/machine path (admin)
-            # for now will just use user path
-        #later on replace the old java path with the new path
-            # you will need to save the last path to a settings file
-                # if the last saved path is not present in env path just append it
-        #later on add it to fixed to path
+   #TODO backup used path to settings object
 
 
- #output the list if empty, with numbers
+   $oldPath = [Environment]::GetEnvironmentVariable("Test", [System.EnvironmentVariableTarget]::User)
+   #TODO backup old path to settings object
+   p $oldPath.Contains($path)
+
+
+   [Environment]::SetEnvironmentVariable('Test', $oldPath + ";"+ $path, [System.EnvironmentVariableTarget]::User)
+
 }
 
 function p {
@@ -40,10 +52,7 @@ function p {
 }
 
 function testground {
-    [Environment]::SetEnvironmentVariable('Test', 'test', [System.EnvironmentVariableTarget]::Machine)
+    echo ([Environment]::GetEnvironmentVariable("Test", [System.EnvironmentVariableTarget]::User))
 }
 
 
-
-# use modules to privatize the functions you don't want to export
-#EXTRA: output the path of the contents file
