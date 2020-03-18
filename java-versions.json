@@ -1,4 +1,4 @@
 [
     {"name": "javaVersionManager", "path": "C:\\Users\\brakke\\base\\JavaVersionManagerForWindows"},
-    {"name": "test1", "path": "c:/does/not/exist/1"}
+    {"name": "openJdk11", "path": "C:\\Program Files\\AdoptOpenJDK\\jdk-11.0.5.10-hotspot\\bin"}
 ]

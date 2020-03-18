@@ -40,7 +40,7 @@ function java-select-version {
    $name = $java_version.name
    $path = $java_version.path
 
-   $oldPath = getEnvironmentVariable "Test"
+   $oldPath = getEnvironmentVariable "Path"
    $oldValue = getEnvironmentVariable $prefix"previousValue"
 
    p $oldPath
@@ -59,7 +59,7 @@ function java-select-version {
 
 
    p $newValue
-   setEnvironmentVariable "Test" $newValue
+   setEnvironmentVariable "Path" $newValue
    setEnvironmentVariable $prefix"oldPath" $oldPath
    setEnvironmentVariable $prefix"previousValue" $path
 }
@@ -79,5 +79,7 @@ function reloadEnv {
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User") 
     $env:Test = getEnvironmentVariable "Test"
 }
+
+Export-ModuleMember -Function java-select-version
 
 
