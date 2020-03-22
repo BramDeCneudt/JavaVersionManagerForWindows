@@ -36,11 +36,11 @@ function java-select-version {
     }
 
     elseif ($List) {
-        java-get-list
+        java-get-indexed-list
     }
      
     elseif ($PSBoundParameters.ContainsKey("Add")) {
-        #implement logic to add to the json file;
+        add-to-java-list $Add
     }
 
     elseif ($PSBoundParameters.ContainsKey("Remove")) {
@@ -52,20 +52,45 @@ function java-select-version {
 }
 
 function java-get-list {
-    $javaVersionObjects = getObjectsFromFile "java-versions.json"
+#create a list here instead of a array
+    getObjectsFromFile "java-versions.json"
+}
+
+function add-to-java-list {
+    Param(
+        [parameter(Mandatory=$True)][String] $NameAndPath
+    )
+    $Name,$Path = $NameAndPath.Split(":");
+    p "adding following to the list"
+    p $Name
+    p $Path
+    $javaObject = New-Object -TypeName psobject
+    $javaObject | Add-Member -NotePropertyName name -NotePropertyValue $Name
+    $javaObject | Add-Member -NotePropertyName path -NotePropertyValue $Path
+
+    $javaObject
+    $newArray = java-get-list
+    $newArray += $javaObject
+    #make a save method of this
+    $newArray | ConvertTo-Json | Out-File "$PSScriptRoot/java-versions.json"
+
+}
+
+function java-get-indexed-list {
+    $javaVersionObjects = java-get-list
     $index = 0;
     foreach ($javaVersion in $javaVersionObjects) {
         $javaVersion | Add-Member -NotePropertyName index -NotePropertyValue $index
         $index++
     }
-    $javaVersionObjects
+    $javaVersionObjects.Gettype()
 }
 
 function java-set-version {
     Param(
         [parameter(Mandatory = $True)][Int] $Number
     )
-    $array = get-java-versions
+    $array = java-get-list
     $java_version = $array[$number]
     $name = $java_version.name
     $path = $java_version.path
