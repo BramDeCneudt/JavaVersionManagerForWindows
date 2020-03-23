@@ -53,7 +53,9 @@ function java-select-version {
 
 function java-get-list {
 #create a list here instead of a array
-    getObjectsFromFile "java-versions.json"
+    $javaArray = getObjectsFromFile "java-versions.json"
+    $javaArrayList = New-Object System.Collections.ArrayList(,$javaArray)
+    return ,$javaArrayList
 }
 
 function add-to-java-list {
@@ -70,7 +72,7 @@ function add-to-java-list {
 
     $javaObject
     $newArray = java-get-list
-    $newArray += $javaObject
+    $newArray.add($javaObject)
     #make a save method of this
     $newArray | ConvertTo-Json | Out-File "$PSScriptRoot/java-versions.json"
 
@@ -83,7 +85,7 @@ function java-get-indexed-list {
         $javaVersion | Add-Member -NotePropertyName index -NotePropertyValue $index
         $index++
     }
-    $javaVersionObjects.Gettype()
+    $javaVersionObjects
 }
 
 function java-set-version {
