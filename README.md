@@ -4,7 +4,7 @@ Simple down to earth java version manager for windows.
 
 This script will make it possible to easily switch between different java versions installed onto your Windows machine.
 
- **Disclaimer: **you will still need to install the different versions of java onto your machine and add them to the script!
+ **Disclaimer:** you will still need to install the different versions of java onto your machine and add them to the script!
 
 **This script won't work if you have a java version path on System level, remove this one first otherwise the script won't work**
 
