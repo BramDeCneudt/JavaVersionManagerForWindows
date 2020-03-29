@@ -25,18 +25,20 @@ Congratulations you can now use the script!
 
 `java-select-version`
 
-​	`[-Init]`						initializes the script for first time use, execute this one before all the other 
-​											commands
+	`[-Init]`	
+	Initializes the script for first time use, execute this one before all the other commands
 
-​	`[-Number] <int>`		selects which java version you want to add to path
+	`[-Number] <int>`	
+	Selects which java version you want to add to path
 
- 	`[-List]`						gives a list of all added java paths and their index number you can use in
-											the number command
+ 	`[-List]`	
+	Gives a list of all added java paths and their index number you can use in the number command
 
-​	`[-Add] <string>`		adds a java path to the list must be in following pattern: java-name:c/path/to/bin, 
-​											you cannot use a ':' in the java-name. e.g. "oracleJava:c:/java/oracle/java/bin"
+	`[-Add] <string>`		
+	Adds a java path to the list must be in following pattern: java-name:c/path/to/bin, you cannot use a ':' in the java-name. e.g. "oracleJava:c:/java/oracle/java/bin"
 
-​	``[-Remove] <int>` 	removes the specified index from the list
+	`[-Remove] <int>` 	
+	Removes the specified index from the list
 
 
 
