@@ -25,7 +25,7 @@ Congratulations you can now use the script!
 
 `Select-JavaVersion`
 
-```powershell
+```
 [-Init]
 Initializes the script for first time use, execute this one before all the other commands.
 
