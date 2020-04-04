@@ -4,9 +4,9 @@ Simple down to earth java version manager for windows.
 
 This script will make it possible to easily switch between different java versions installed onto your Windows machine.
 
- **Disclaimer:** you will still need to install the different versions of java onto your machine and add them to the script, the script only handles changes to the class path.
+You will still need to install the different versions of java onto your machine and add them to the script, the script only handles changes to the env path.
 
-**This script won't work if you have a java version path on System level, remove this one first otherwise the script won't work**
+This script won't work if you have a java version path on System level, remove this one first otherwise the script won't work.
 
 # Installation
 
@@ -25,20 +25,22 @@ Congratulations you can now use the script!
 
 `Select-JavaVersion`
 
-	`[-Init]`	
-	Initializes the script for first time use, execute this one before all the other commands
-	
-	`[-Number] <int>`	
-	Selects which java version you want to add to path
+```powershell
+[-Init]
+Initializes the script for first time use, execute this one before all the other commands.
 
- 	`[-List]`	
-	Gives a list of all added java paths and their index number you can use in the number command
+[-Number] <int>
+Selects which java version you want to add to path.
 
-	`[-Add] <string>`		
-	Adds a java path to the list must be in following pattern: java-name:c/path/to/bin, you cannot use a ':' in the java-name. e.g. "oracleJava:c:/java/oracle/java/bin"
-	
-	`[-Remove] <int>` 	
-	Removes the specified index from the list
+[-List]
+Gives a list of all added java paths and their index number you can use in the number command.
+                                        
+[-Add] <string>
+Adds a java path to the list must be in following pattern: java-name:c/path/to/bin. You cannot use a ':' in the java-name. e.g. 'oracleJava:c:/java/oracle/java/bin'
+
+[-Remove] <int>
+Removes the specified index from the list.
+```
 
 
 
@@ -122,6 +124,5 @@ OpenJDK 64-Bit Server VM Zulu14.27+1-CA (build 14+36, mixed mode, sharing)
 
 # TODO
 
-* refactor variable naming and function naming
 * write command to replace java versions on JAVA_HOME
 
