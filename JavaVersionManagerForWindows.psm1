@@ -61,7 +61,7 @@ function java-get-list {
     return , $javaArrayList
 }
 
-function java-select-version {
+function Select-JavaVersion {
     Param(
         [parameter(Mandatory = $false)][switch] $Init,
         [parameter(Mandatory = $false)][Int] $Number,
@@ -94,16 +94,21 @@ Welcome to JavaVersionManagerForWindows!
 If this is the first time starting this script you should initialize the script with the -Init command!
 V0.0.1
 
-java-select-version
-[-Init]              initializes the script for first time use, execute this one before all the other commands
+Select-JavaVersion
+[-Init]
+Initializes the script for first time use, execute this one before all the other commands.
 
-[-Number] <int>	    selects which java version you want to add to path
+[-Number] <int>
+Selects which java version you want to add to path.
 
-[-List]             gives a list of all added java paths and their index number you can use in the number command
+[-List]
+Gives a list of all added java paths and their index number you can use in the number command.
                                         
-[-Add] <string>	    adds a java path to the list must be in following pattern: java-name:c/path/to/bin, you cannot use a ':' in the java-name. e.g. 'oracleJava:c:/java/oracle/java/bin'
+[-Add] <string>
+Adds a java path to the list must be in following pattern: java-name:c/path/to/bin. You cannot use a ':' in the java-name. e.g. 'oracleJava:c:/java/oracle/java/bin'
 
-[-Remove] <int> 	removes the specified index from the list
+[-Remove] <int>
+Removes the specified index from the list.
 "
     }
 }
@@ -223,5 +228,4 @@ function reloadEnv {
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User") 
 }
 
-Export-ModuleMember -Function java-select-version
-Export-ModuleMember -Function reloadEnv
+Export-ModuleMember -Function Select-JavaVersion

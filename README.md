@@ -16,18 +16,18 @@ This script will make it possible to easily switch between different java versio
   This will make it possible to execute this script but also other script you download, so watch out with this!
 * Go to `%UserProfile%\Documents\WindowsPowerShell\Modules` ,if it doesn't exist yet create the directory.
 * clone this repository into the above mentioned directory
-* Open a new powershell session and check if following commands works `java-select-version`
-* before you can use the script you first need to init the script for first time use, by executing following command: `java-select-version -init`
+* Open a new powershell session and check if following commands works `Select-JavaVersion`
+* before you can use the script you first need to init the script for first time use, by executing following command: `Select-JavaVersion -init`
 
 Congratulations you can now use the script!
 
 # Commands
 
-`java-select-version`
+`Select-JavaVersion`
 
 	`[-Init]`	
 	Initializes the script for first time use, execute this one before all the other commands
-
+	
 	`[-Number] <int>`	
 	Selects which java version you want to add to path
 
@@ -36,7 +36,7 @@ Congratulations you can now use the script!
 
 	`[-Add] <string>`		
 	Adds a java path to the list must be in following pattern: java-name:c/path/to/bin, you cannot use a ':' in the java-name. e.g. "oracleJava:c:/java/oracle/java/bin"
-
+	
 	`[-Remove] <int>` 	
 	Removes the specified index from the list
 
@@ -59,20 +59,20 @@ For example you have following java versions installed on your computer that you
 ### Init the script
 
 first you want to do is init the script if you haven't already :
-`java-select-version init`
+`Select-JavaVersion init`
 
 ### Adding the java paths to the script
 
 when that is done you can add the java version paths to the script:
 
-command format: `java-select-version -Add "javaName:c:/path/to/java/bin"`
+command format: `Select-JavaVersion -Add "javaName:c:/path/to/java/bin"`
 
-* `java-select-version -Add "adoptjdk8:C:\Program Files\AdoptOpenJDK\jdk-8.0.242.08-hotspot\bin"`
-* `java-select-version -Add "adoptjdk11:C:\Program Files\AdoptOpenJDK\jdk-11.0.6.10-hotspot\bin"`
-* `java-select-version -Add "zulu14:C:\Program Files\Zulu\zulu-14\bin"`
+* `Select-JavaVersion -Add "adoptjdk8:C:\Program Files\AdoptOpenJDK\jdk-8.0.242.08-hotspot\bin"`
+* `Select-JavaVersion -Add "adoptjdk11:C:\Program Files\AdoptOpenJDK\jdk-11.0.6.10-hotspot\bin"`
+* `Select-JavaVersion -Add "zulu14:C:\Program Files\Zulu\zulu-14\bin"`
 
 you can than verify that they have been added to the script by checking if they are listed:
-`java-select-version -List`
+`Select-JavaVersion -List`
 
 should give this output:
 
@@ -88,7 +88,7 @@ index name       path
 
 Now you can easily change between different java version by doing following:
 
-* `java-select-version -Number 0` if you want to use the adoptJDK 8
+* `Select-JavaVersion -Number 0` if you want to use the adoptJDK 8
 
 ```powershell
 openjdk version "1.8.0_242"
@@ -96,7 +96,7 @@ OpenJDK Runtime Environment (AdoptOpenJDK)(build 1.8.0_242-b08)
 OpenJDK 64-Bit Server VM (AdoptOpenJDK)(build 25.242-b08, mixed mode)
 ```
 
-* `java-select-version -Number 1` if you want to use the adoptJDK 11
+* `Select-JavaVersion -Number 1` if you want to use the adoptJDK 11
 
 ```powershell
 openjdk version "11.0.6" 2020-01-14
@@ -104,7 +104,7 @@ OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.6+10)
 OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.6+10, mixed mode)
 ```
 
-* `java-select-version -Number 2` if you want to use zulu 14
+* `Select-JavaVersion -Number 2` if you want to use zulu 14
 
 ```powershell
 openjdk version "14" 2020-03-17
