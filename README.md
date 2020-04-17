@@ -54,16 +54,16 @@ Removes the specified index from the list.
 
 
 
-# Change the JAVA_HOME variable and Java version path at the same time
+## Change the JAVA_HOME variable and Java version path at the same time
 
 You can easily change the JAVA_HOME variable and the java version on you path in one go!
 
-## Initialize  the script
+### Initialize  the script
 
 First you want to do is initialize the script if you haven't already :
 `Select-JavaVersion init`
 
-## Adding the java paths to the script
+### Adding the java paths to the script
 
 When that is done you can add the java version paths to the script:
 
@@ -87,7 +87,7 @@ index name       path
 
 
 
-## Changing JAVA_HOME and Java version path
+### Changing JAVA_HOME and Java version path
 
 Now you can easily change JAVA_HOME and Java version path:
 
