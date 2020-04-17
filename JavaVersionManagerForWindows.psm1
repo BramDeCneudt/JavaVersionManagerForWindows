@@ -1,4 +1,44 @@
-$prefix = "Wjvm_"
+<#PSScriptInfo
+
+.VERSION 0.0.2
+
+.GUID 5a018c85-9cd8-4d54-9928-c9a846013829
+
+.AUTHOR bramdecneudt@gmail.com
+
+.COMPANYNAME N/A
+
+.COPYRIGHT MIT license
+
+.TAGS Java JavaHome JavaVersionManager
+
+.LICENSEURI https://github.com/BramDeCneudt/JavaVersionManagerForWindows/blob/master/LICENSE
+
+.PROJECTURI https://github.com/BramDeCneudt/JavaVersionManagerForWindows
+
+.ICONURI 
+
+.EXTERNALMODULEDEPENDENCIES 
+
+.REQUIREDSCRIPTS 
+
+.EXTERNALSCRIPTDEPENDENCIES 
+
+.RELEASENOTES
+
+
+#>
+
+<# 
+
+.DESCRIPTION 
+Simple down to earth java version manager for windows.
+
+This script will make it possible to easily switch between different java versions installed onto your Windows machine.
+
+#> 
+
+$prefix = "JVMFW_"
 $java_version_file_name = "java-versions.json"
 $debug = $false
 
@@ -10,19 +50,27 @@ function getObjectsFromFile {
     Get-Content -Path $PSScriptRoot\$fileName -Encoding UTF8 | ConvertFrom-Json
 }
 
-function getEnvironmentVariable {
+function getUserEnvironmentVariable {
     Param(
         [parameter(Mandatory = $true)][string] $variableName
     )
     [Environment]::GetEnvironmentVariable($variableName, [System.EnvironmentVariableTarget]::User)
 }
 
-function setEnvironmentVariable {
+function setUserEnvironmentVariable {
     Param(
         [parameter(Mandatory = $true)][String] $variableName,
         [parameter(Mandatory = $true)][String] $newValue
     )
     [Environment]::SetEnvironmentVariable($variableName, $newValue, [System.EnvironmentVariableTarget]::User)
+}
+
+function setSystemEnvironmentVariable {
+    Param(
+        [parameter(Mandatory = $true)][String] $variableName,
+        [parameter(Mandatory = $true)][String] $newValue
+    )
+    [Environment]::SetEnvironmentVariable($variableName, $newValue, [System.EnvironmentVariableTarget]::Machine)
 }
 
 function createFile {
@@ -64,7 +112,8 @@ function java-get-list {
 function Select-JavaVersion {
     Param(
         [parameter(Mandatory = $false)][switch] $Init,
-        [parameter(Mandatory = $false)][Int] $Number,
+        [parameter(Mandatory = $false)][Int] $Path,
+        [parameter(Mandatory = $false)][Int] $Home,
         [parameter(Mandatory = $false)][switch] $List,
         [parameter(Mandatory = $false)][String] $Add,
         [parameter(Mandatory = $false)][String] $Remove
@@ -73,10 +122,18 @@ function Select-JavaVersion {
     if ($Init) {
         init
     }
-    elseif ($PSBoundParameters.ContainsKey("Number")) {
-        java-set-version $Number
+    elseif ($PSBoundParameters.ContainsKey("Home") -and $PSBoundParameters.ContainsKey("Path")) {
+        p "Setting home variable"
+        set-java-home-version $Home
+        p "Adding to java path"
+        set-java-path-version $Path
     }
-
+    elseif ($PSBoundParameters.ContainsKey("Home")) {
+        set-java-home-version $Home
+    }
+    elseif ($PSBoundParameters.ContainsKey("Path")) {
+        set-java-path-version $Path
+    }
     elseif ($List) {
         java-get-indexed-list
     }
@@ -92,20 +149,26 @@ function Select-JavaVersion {
         Write-Output "
 Welcome to JavaVersionManagerForWindows!
 If this is the first time starting this script you should initialize the script with the -Init command!
-V0.0.1
+V0.0.2
 
 Select-JavaVersion
 [-Init]
 Initializes the script for first time use, execute this one before all the other commands.
 
-[-Number] <int>
+[-Home] <int>
+Selects which java version you want to set as JAVA_HOME variable, needs an powershell with admin privilges.
+You can chain this with -Path argument e.g. Java-SelectVersion -Path 0 -Home 0
+
+[-Path] <int>
 Selects which java version you want to add to path.
+You can chain this with -Home argument e.g. Java-SelectVersion -Path 0 -Home 0
 
 [-List]
-Gives a list of all added java paths and their index number you can use in the number command.
+Gives a list of all added java paths and their index Index you can use in the Index command.
                                         
 [-Add] <string>
-Adds a java path to the list must be in following pattern: java-name:c/path/to/bin. You cannot use a ':' in the java-name. e.g. 'oracleJava:c:/java/oracle/java/bin'
+Adds a java path to the list must be in following pattern: java-name:C:\path\to\java. You cannot use a ':' in the java-name. e.g. 'oracleJava:C:\java\oracle\java'
+This needs to be the java root path and not the bin path, bin path gets automatically appended when you use it in the -Path argument.
 
 [-Remove] <int>
 Removes the specified index from the list.
@@ -128,36 +191,49 @@ function init {
     p "enjoy the script!"
 }
 
-function java-set-version {
-    Param(
-        [parameter(Mandatory = $True)][Int] $Number
+function set-java-home-version {
+    param (
+        [parameter(Mandatory = $True)][Int] $Index
     )
     $array = java-get-list
-    $java_version = $array[$number]
+    $java_version = $array[$Index]
     $name = $java_version.name
     $path = $java_version.path
 
-    $oldPath = getEnvironmentVariable "Path"
-    $oldValue = getEnvironmentVariable $prefix"previousValue"
 
-    p $oldPath
+    p "Setting JAVA_HOME variable"
+    setSystemEnvironmentVariable "JAVA_HOME" $path
+}
 
-    $newValue = $oldPath + ";" + $path
+function set-java-path-version {
+    Param(
+        [parameter(Mandatory = $True)][Int] $Index
+    )
+    $array = java-get-list
+    $java_version = $array[$Index]
+    $name = $java_version.name
+    $path = $java_version.path
+    $path = $path + "\bin"
 
-    if (![String]::IsNullOrWhiteSpace($oldValue)) {
-        p "non empty value, seeing if it is contained in the path"
-        if ($oldPath.contains($oldValue)) {
-            p "oldvalue is contained in oldpath, replacing the value"
-            $newValue = $oldPath.replace($oldValue, $path)
+    $oldPath = getUserEnvironmentVariable "Path"
+    $previousJavaValue = getUserEnvironmentVariable $prefix"previousJavaValue"
+
+    $newJavaValue = $oldPath + ";" + $path
+
+    if (![String]::IsNullOrWhiteSpace($previousJavaValue)) {
+        p "Found previous value, searching if it's contained in path"
+        if ($oldPath.contains($previousJavaValue)) {
+            p "Previous value is contained in path, replacing the value"
+            $newJavaValue = $oldPath.replace($previousJavaValue, $path)
         }
         else {
-            p "found oldvalue but was not contained in path"
+            p "Previous value was not contained in path, appending to path"
         }
     }
 
-    setEnvironmentVariable "Path" $newValue
-    setEnvironmentVariable $prefix"oldPath" $oldPath
-    setEnvironmentVariable $prefix"previousValue" $path
+    setUserEnvironmentVariable "Path" $newJavaValue
+    setUserEnvironmentVariable $prefix"oldPath" $oldPath
+    setUserEnvironmentVariable $prefix"previousJavaValue" $path
 
 }
 
@@ -166,7 +242,7 @@ function java-get-indexed-list {
     $newJavaVersionObjects = New-Object Collections.Generic.List[Object]
     $index = 0;
     foreach ($javaVersion in $javaVersionObjects) {
-        #needs better work around for getting the index column first, but works for now
+        #TODO needs better work around for getting the index column first, but works for now
         $newJavaVersion = New-Object -TypeName psobject
         $newJavaVersion | Add-Member -NotePropertyName index -NotePropertyValue $index
         $newJavaVersion | Add-Member -NotePropertyName name -NotePropertyValue $javaVersion.name
@@ -183,8 +259,8 @@ function add-to-java-list {
     )
     $Name, $Path = $NameAndPath.Split(":", 2);
     p "Adding following object to list"
-    p  "name: $Name" 
-    p  "path: $Path" 
+    p  "Name: $Name" 
+    p  "Path: $Path" 
     $javaObject = New-Object -TypeName psobject
     $javaObject | Add-Member -NotePropertyName name -NotePropertyValue $Name
     $javaObject | Add-Member -NotePropertyName path -NotePropertyValue $Path
